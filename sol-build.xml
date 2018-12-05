@@ -4,8 +4,36 @@
 	<description>
 			Script for RNS Assignment 2 solution
 	</description>
+	
+	<!-- external libraries -->
+	<property name="ext.lib.dir" location="/opt/dp2/shared/lib" />
+	
+	<!-- define location of directories -->
+	<property name="root.location" location="." />
+	<property name="custom.dir" location="${root.location}/custom"/>
+	<property name="ext.lib.dir" location="/opt/dp2/shared/lib" />
+	
+	<path id="project.classpath">
+		<pathelement location="bin" />
+		<fileset dir="${ext.lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	 </path>
 
+	
+	<!-- define the client artifacts generation target -->
 	<target name="generate-artifacts">
+		<echo message="Generate classes from DataTypes.xsd" />
+		<exec executable="xjc">
+			<arg line="-d gen-src -p it.polito.dp2.RNS.rest.jaxb ${custom.dir}/DataTypes.xsd"/>
+		</exec>
+		<echo message="Compiling the java source files..." />
+		<javac destdir="bin" debug="on" includeantruntime="false">
+			<src path="gen-src" />
+	   		<src path="src" />
+			<classpath refid="project.classpath"/>
+		</javac>
+		
 	</target>
 
 </project>

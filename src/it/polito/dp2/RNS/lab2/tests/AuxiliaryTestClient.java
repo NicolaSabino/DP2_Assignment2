@@ -1,14 +1,7 @@
 package it.polito.dp2.RNS.lab2.tests;
 
-import java.io.StringReader;
 import java.math.BigInteger;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
