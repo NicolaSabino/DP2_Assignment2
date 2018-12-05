@@ -3,30 +3,13 @@ package it.polito.dp2.RNS.sol2;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.UriBuilder;
-
 import it.polito.dp2.RNS.lab2.BadStateException;
 import it.polito.dp2.RNS.lab2.ModelException;
 import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
 
-public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
+public class PathFinder_ implements it.polito.dp2.RNS.lab2.PathFinder {
 	
-	private WebTarget target;
-	private Client client;
-	
-	public PathFinder() {
-		// TODO Auto-generated constructor stub
-		
-		// create the client object
-		this.client = ClientBuilder.newClient();
-		
-		// create a web target for the main URI
-		//this.target = client.target(getBaseURI()).path("negotiateService");
-	}
 
 	
 	/**
