@@ -4,11 +4,10 @@ import it.polito.dp2.RNS.lab2.PathFinder;
 import it.polito.dp2.RNS.lab2.PathFinderException;
 
 public class PathFinderFactory_ extends it.polito.dp2.RNS.lab2.PathFinderFactory {
-
+	
 
 	@Override
 	public PathFinder newPathFinder() throws PathFinderException {
-		// TODO Auto-generated method stub
 		
 		// check if the system property is properly setted
 		if(System.getProperty("it.polito.dp2.RNS.lab2.URL") == null){
@@ -17,8 +16,9 @@ public class PathFinderFactory_ extends it.polito.dp2.RNS.lab2.PathFinderFactory
 		}
 		
 		// create a new path finder
-		PathFinder_ f = new PathFinder_();
+		PathFinder_ f = new PathFinder_(System.getProperty("it.polito.dp2.RNS.lab2.URL"));
 		return f;
+		
 	}
 
 }

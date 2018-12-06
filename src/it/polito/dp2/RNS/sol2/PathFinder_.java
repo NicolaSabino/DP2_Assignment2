@@ -1,15 +1,74 @@
 package it.polito.dp2.RNS.sol2;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+
+import com.sun.xml.internal.ws.runtime.config.ObjectFactory;
+
+import java.net.URI;
+
+import it.polito.dp2.RNS.PlaceReader;
+import it.polito.dp2.RNS.RnsReader;
+import it.polito.dp2.RNS.RnsReaderException;
+import it.polito.dp2.RNS.RnsReaderFactory;
 import it.polito.dp2.RNS.lab2.BadStateException;
 import it.polito.dp2.RNS.lab2.ModelException;
 import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
+import it.polito.dp2.RNS.rest.jaxb.Node;
+import it.polito.dp2.RNS.rest.jaxb.NodeResult;
+import it.polito.dp2.RNS.rest.jaxb.Relationship;
+import it.polito.dp2.RNS.rest.jaxb.RelationshipResult;
 
 public class PathFinder_ implements it.polito.dp2.RNS.lab2.PathFinder {
 	
+	private WebTarget			target;		// base URL
+	private Client				client;
+	private RnsReader 			monitor;	// used to access to the interface
+	private RnsReaderFactory	rFactory;	// factory used to instantiate the interface
+	private Status				status;
+	private Map<URI,String>		n_map;		// loaded nodes
+	private Map<URI, String> 	r_map;		// loaded relationships
+	
+	
+	
+	public PathFinder_(String sys_property){
+		
+		// The implementation of the interfaces to be used as data source
+		// must be selected using the  `abstract factory` pattern:
+		// we must create the data source by instantiating 
+		// `it.polito.dp2.RNS.RnsReaderFactory` by means of its static method
+		// `newInstance()`
+		this.rFactory	= RnsReaderFactory.newInstance();
+		try {
+			this.monitor	= this.rFactory.newRnsReader();
+		} catch (RnsReaderException e) {
+			e.printStackTrace();
+			System.err.println(" `factory.newRnsReader()` exception");
+		}
+		
+		
+		// setting the web target
+		this.client = ClientBuilder.newClient(); 		// create the Client object
+		this.target = this.client.target(sys_property); // create a web target for the main URI
+		
+		// setting the status
+		this.status = Status.NOT_LOADED;
+		
+		
+		this.n_map = new HashMap<>();
+		this.r_map = new HashMap<>();
+		
+		// new factory for the geneated classes in 
+		//this.oFactory = new ObjectFactory();
+		
+	}
 
 	
 	/**
@@ -18,8 +77,13 @@ public class PathFinder_ implements it.polito.dp2.RNS.lab2.PathFinder {
 	 */
 	@Override
 	public boolean isModelLoaded() {
-		// TODO Auto-generated method stub
-		return false;
+		// check `status` attribute
+		if(this.status.compareTo(Status.LOADED) == 0){
+			return true;	// the PathFinder is able to compute a shortest path
+		}else{
+			return false;	// the PathFInder is not able to compute a shortest path
+			// TODO: throw an exception
+		}
 	}
 	
 	/**
@@ -31,7 +95,14 @@ public class PathFinder_ implements it.polito.dp2.RNS.lab2.PathFinder {
 	 */
 	@Override
 	public void reloadModel() throws ServiceException, ModelException {
-		// TODO Auto-generated method stub
+	
+		for(PlaceReader reader : monitor.getPlaces(null)){ // for each place in the system
+			Node node = new Node();														// create a new empty node
+			node.setId(reader.getId());													// fill it with the corresponding id of the reader
+			NodeResult result = insertNewNode(node);									// try to insert in Neo4j `node`	
+			this.n_map.put(URI.create(result.getSelf()), reader.getId());				// store the URI identifier in `n_map` with the corresponding id
+			
+		}
 
 	}
 
@@ -51,6 +122,16 @@ public class PathFinder_ implements it.polito.dp2.RNS.lab2.PathFinder {
 	public Set<List<String>> findShortestPaths(String source, String destination, int maxlength)
 			throws UnknownIdException, BadStateException, ServiceException {
 		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	// TODO new node
+	public NodeResult insertNewNode(Node n){
+		return null;
+	}
+	
+	// TODO new relationship
+	public RelationshipResult insertRelationship(Relationship r){
 		return null;
 	}
 	
