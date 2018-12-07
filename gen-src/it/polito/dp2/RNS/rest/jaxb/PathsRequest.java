@@ -8,6 +8,7 @@
 
 package it.polito.dp2.RNS.rest.jaxb;
 
+import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -16,28 +17,28 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for NodeResult complex type.
+ * <p>Java class for pathsRequest complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="NodeResult">
+ * &lt;complexType name="pathsRequest">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="metadata" type="{}metadata"/>
- *         &lt;element name="data">
+ *         &lt;element name="to" type="{http://www.w3.org/2001/XMLSchema}anyURI"/>
+ *         &lt;element name="max_depth" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
+ *         &lt;element name="relationships">
  *           &lt;complexType>
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *                   &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
  *           &lt;/complexType>
  *         &lt;/element>
- *         &lt;element name="self" type="{http://www.w3.org/2001/XMLSchema}anyURI"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -47,91 +48,92 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "NodeResult", propOrder = {
-    "metadata",
-    "data",
-    "self"
+@XmlType(name = "pathsRequest", propOrder = {
+    "to",
+    "maxDepth",
+    "relationships"
 })
-public class NodeResult {
+public class PathsRequest {
 
-    @XmlElement(required = true)
-    protected Metadata metadata;
-    @XmlElement(required = true)
-    protected NodeResult.Data data;
     @XmlElement(required = true)
     @XmlSchemaType(name = "anyURI")
-    protected String self;
+    protected String to;
+    @XmlElement(name = "max_depth", required = true)
+    @XmlSchemaType(name = "positiveInteger")
+    protected BigInteger maxDepth;
+    @XmlElement(required = true)
+    protected PathsRequest.Relationships relationships;
 
     /**
-     * Gets the value of the metadata property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Metadata }
-     *     
-     */
-    public Metadata getMetadata() {
-        return metadata;
-    }
-
-    /**
-     * Sets the value of the metadata property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Metadata }
-     *     
-     */
-    public void setMetadata(Metadata value) {
-        this.metadata = value;
-    }
-
-    /**
-     * Gets the value of the data property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link NodeResult.Data }
-     *     
-     */
-    public NodeResult.Data getData() {
-        return data;
-    }
-
-    /**
-     * Sets the value of the data property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link NodeResult.Data }
-     *     
-     */
-    public void setData(NodeResult.Data value) {
-        this.data = value;
-    }
-
-    /**
-     * Gets the value of the self property.
+     * Gets the value of the to property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getSelf() {
-        return self;
+    public String getTo() {
+        return to;
     }
 
     /**
-     * Sets the value of the self property.
+     * Sets the value of the to property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setSelf(String value) {
-        this.self = value;
+    public void setTo(String value) {
+        this.to = value;
+    }
+
+    /**
+     * Gets the value of the maxDepth property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
+     */
+    public BigInteger getMaxDepth() {
+        return maxDepth;
+    }
+
+    /**
+     * Sets the value of the maxDepth property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
+     */
+    public void setMaxDepth(BigInteger value) {
+        this.maxDepth = value;
+    }
+
+    /**
+     * Gets the value of the relationships property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link PathsRequest.Relationships }
+     *     
+     */
+    public PathsRequest.Relationships getRelationships() {
+        return relationships;
+    }
+
+    /**
+     * Sets the value of the relationships property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link PathsRequest.Relationships }
+     *     
+     */
+    public void setRelationships(PathsRequest.Relationships value) {
+        this.relationships = value;
     }
 
 
@@ -145,7 +147,7 @@ public class NodeResult {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+     *         &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}string"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
@@ -156,35 +158,35 @@ public class NodeResult {
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-        "id"
+        "type"
     })
-    public static class Data {
+    public static class Relationships {
 
         @XmlElement(required = true)
-        protected String id;
+        protected String type;
 
         /**
-         * Gets the value of the id property.
+         * Gets the value of the type property.
          * 
          * @return
          *     possible object is
          *     {@link String }
          *     
          */
-        public String getId() {
-            return id;
+        public String getType() {
+            return type;
         }
 
         /**
-         * Sets the value of the id property.
+         * Sets the value of the type property.
          * 
          * @param value
          *     allowed object is
          *     {@link String }
          *     
          */
-        public void setId(String value) {
-            this.id = value;
+        public void setType(String value) {
+            this.type = value;
         }
 
     }

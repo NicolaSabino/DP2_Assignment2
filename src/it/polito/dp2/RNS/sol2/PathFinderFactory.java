@@ -1,9 +1,8 @@
 package it.polito.dp2.RNS.sol2;
 
-import it.polito.dp2.RNS.lab2.PathFinder;
 import it.polito.dp2.RNS.lab2.PathFinderException;
 
-public class PathFinderFactory_ extends it.polito.dp2.RNS.lab2.PathFinderFactory {
+public class PathFinderFactory extends it.polito.dp2.RNS.lab2.PathFinderFactory {
 	
 
 	@Override
@@ -16,7 +15,7 @@ public class PathFinderFactory_ extends it.polito.dp2.RNS.lab2.PathFinderFactory
 		}
 		
 		// create a new path finder
-		PathFinder_ f = new PathFinder_(System.getProperty("it.polito.dp2.RNS.lab2.URL"));
+		PathFinder f = new PathFinder(System.getProperty("it.polito.dp2.RNS.lab2.URL"));
 		return f;
 		
 	}
