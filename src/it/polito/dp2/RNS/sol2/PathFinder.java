@@ -12,6 +12,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import java.math.BigInteger;
 import java.net.URI;
@@ -26,8 +27,7 @@ import it.polito.dp2.RNS.lab2.ServiceException;
 import it.polito.dp2.RNS.lab2.UnknownIdException;
 import it.polito.dp2.RNS.rest.jaxb.Node;
 import it.polito.dp2.RNS.rest.jaxb.NodeResult;
-import it.polito.dp2.RNS.rest.jaxb.Paths;
-import it.polito.dp2.RNS.rest.jaxb.Paths.Path;
+import it.polito.dp2.RNS.rest.jaxb.Path;
 import it.polito.dp2.RNS.rest.jaxb.PathsRequest;
 import it.polito.dp2.RNS.rest.jaxb.Relationship;
 import it.polito.dp2.RNS.rest.jaxb.RelationshipResult;
@@ -150,9 +150,8 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 	public Set<List<String>> findShortestPaths(String source, String destination, int maxlength)
 			throws UnknownIdException, BadStateException, ServiceException {
 		Set<List<String>> resultSet = new HashSet<List<String>>();	
-		Paths result;
 		
-		System.out.println("source:" + source + " destination:" + destination + " maxlenght:" + maxlength);
+		//System.out.println("source:" + source + " destination:" + destination + " maxlenght:" + maxlength);
 		
 		if(this.status == Status.NOT_LOADED)						// if the operation is called when in the initial state 
 			throw new BadStateException("No model loaded");			// (no model loaded) throw an exception														
@@ -166,30 +165,29 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 		request.setMaxDepth(BigInteger.valueOf(maxlength));			// set `maxlength`
 		request.setTo(to.toString());								// set `to`
 		
-		// -- CALCULATE THE SHORTEST PATHS --
-		try{
-			result = this.target															// base URI
-					.path("data").path("node").path(String.valueOf(from)).path("paths")		// `/data/node/{nodeFromID}/paths`
-					.request(MediaType.APPLICATION_JSON)									// start building a request and define the response media types.
-					.post(Entity.entity(request, MediaType.APPLICATION_JSON), Paths.class);	// build a POST request invocation
-				// if we obtain an empty result, throw an exception
-				if(result == null)
-					throw new ServiceException("An ecxception occurred while uploading");
-		}catch (Exception e) {
-			throw new ServiceException("Exception during shortest paths calculation");
-		}
+		
+		Response res = this.getShortestPath(request,from,to);
+		System.out.println(res.readEntity(String.class));
+		List<Path> result = res.readEntity(new javax.ws.rs.core.GenericType<List<Path>>(){});
+		System.out.println(result.toString());
 		
 		// at this point we have several paths stored in `result`
-		for(Path path : result.getPath()){ 				// for each path stored in `result`
-			List<String> tmp = new ArrayList<>();		// create a temporary list
-			for(String s : path.getNodes().getNode()){	// for each node in the path
-				String id = this.link_sys_map.get(s);	// calculate the correspondig place stored in `link_sys_map`
+		for(Path path : result){ 										// for each path stored in `result`
+			System.out.println("\t"+path.getStart());
+			System.out.println("\t"+path.getEnd());
+			System.out.println("\t"+path.getLength());
+			System.out.println("\t"+path.getNodes().getNode());
+			System.out.println("\t"+path.getRelationships().getRelationship());
+			List<String> tmp = new ArrayList<>();						// create a temporary list
+			for(String node :path.getNodes().getNode()){					// for each node in the path
+				System.out.println("\t\t"+node);
+				String id = this.link_sys_map.get(node);				// calculate the correspondig place stored in `link_sys_map`
 				if(id == null) throw new UnknownIdException("Bad id");
-				tmp.add(id);							// add `id` to the temp list
+				tmp.add(id);											// add `id` to the temp list
 				System.out.print(id + " ");
 			}
 			System.out.println("");
-			resultSet.add(tmp);							// add `tmp` to the `resultSet`
+			resultSet.add(tmp);											// add `tmp` to the `resultSet`
 		}
 		
 		return resultSet;
@@ -240,6 +238,23 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 			if(result == null) throw new ServiceException("An ecxception occurred while uploading");
 		}catch(Exception e){
 			throw new ServiceException("Exception during relationship uploading");
+		}
+		return result;
+	}
+	
+	public Response getShortestPath(PathsRequest request, Integer from, URI to) throws ServiceException {
+		Response result;
+		try{
+			result = this.target															// base URI
+					.path("data").path("node").path(String.valueOf(from)).path("paths")		// `/data/node/{nodeFromID}/paths`
+					.request(MediaType.APPLICATION_JSON)									// start building a request and define the response media types.
+					.post(Entity.entity(request, MediaType.APPLICATION_JSON), Response.class);	// build a POST request invocation
+				// if we obtain an empty result, throw an exception
+				if(result == null)
+					throw new ServiceException("An ecxception occurred while uploading");
+		}catch (Exception e) {
+			//e.printStackTrace();
+			throw new ServiceException("Exception during shortest paths calculation");
 		}
 		return result;
 	}
