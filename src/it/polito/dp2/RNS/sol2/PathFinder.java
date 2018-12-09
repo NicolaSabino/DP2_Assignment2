@@ -112,7 +112,9 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 			node.setId(reader.getId());													// fill it with the corresponding id of the reader
 			NodeResult result = insertNewNode(node);									// try to insert in Neo4j `node`	
 			this.sys_link_map.put(reader.getId(),URI.create(result.getSelf()));			// store the URI identifier in `n_map` with the corresponding id
+			this.link_sys_map.put(URI.create(result.getSelf()),reader.getId());
 			this.sys_db_map.put(reader.getId(),result.getMetadata().getId().intValue());
+			
 			//System.out.println("NODE:" + reader.getId() + "\t\t" + result.getSelf() );
 		}
 		// -- RELATIONSHIPS --
@@ -166,30 +168,25 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 		request.setTo(to.toString());								// set `to`
 		
 		
-		Response res = this.getShortestPath(request,from,to);
-		System.out.println(res.readEntity(String.class));
-		List<Path> result = res.readEntity(new javax.ws.rs.core.GenericType<List<Path>>(){});
-		System.out.println(result.toString());
+		Response res = this.getShortestPath(request,from,to);									// calculate the shortest path
+		/*
+		 * ! NOTE !
+		 * When using parameterized types for typed entities, a GenericType<T> object
+		 * has to be passed instead of a Class<T> object (because Java erases parameterized
+		 * type information during compilation)
+		 */
+		List<Path> result = res.readEntity(new javax.ws.rs.core.GenericType<List<Path>>(){});	// obtain the result
 		
 		// at this point we have several paths stored in `result`
-		for(Path path : result){ 										// for each path stored in `result`
-			System.out.println("\t"+path.getStart());
-			System.out.println("\t"+path.getEnd());
-			System.out.println("\t"+path.getLength());
-			System.out.println("\t"+path.getNodes().getNode());
-			System.out.println("\t"+path.getRelationships().getRelationship());
-			List<String> tmp = new ArrayList<>();						// create a temporary list
-			for(String node :path.getNodes().getNode()){					// for each node in the path
-				System.out.println("\t\t"+node);
-				String id = this.link_sys_map.get(node);				// calculate the correspondig place stored in `link_sys_map`
-				if(id == null) throw new UnknownIdException("Bad id");
+		for(Path path : result){ 					// for each path stored in `result`
+			List<String> tmp = new ArrayList<>();	// create a temporary list
+			for(String node :path.getNodes()){		// for each node in the path
+				String id = this.link_sys_map.get(URI.create(node));	// calculate the corresponding place stored in `link_sys_map`
+				if(id == null) throw new UnknownIdException("Bad id");	// if there is no corresponding with the loaded model throw an exception
 				tmp.add(id);											// add `id` to the temp list
-				System.out.print(id + " ");
 			}
-			System.out.println("");
 			resultSet.add(tmp);											// add `tmp` to the `resultSet`
 		}
-		
 		return resultSet;
 	}
 	
