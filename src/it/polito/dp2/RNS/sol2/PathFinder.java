@@ -39,9 +39,9 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 	private RnsReader 			monitor;		// used to access to the interface
 	private RnsReaderFactory	rFactory;		// factory used to instantiate the interface
 	private Status				status;
-	private Map<String,URI>		sys_link_map;	// `system identifier - db URI resource` mapping
-	private Map<URI,String>		link_sys_map;	// `db URI resource - system identifier` mapping
-	private Map<String,Integer>	sys_db_map;		// `db identifier - system identifier` mapping	
+	private Map<String,URI>		sys_link_map;	// `place identifier - db URI resource` mapping
+	private Map<URI,String>		link_sys_map;	// `db URI resource - place identifier` mapping
+	private Map<String,Integer>	sys_db_map;		// `place identifier - db identifier -` mapping	
 	private Set<URI>			r_set;			// loaded relationships
 	
 	
@@ -119,15 +119,13 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 		}
 		// -- RELATIONSHIPS --
 		for(PlaceReader reader : set){ // for each place in the system
-			//System.out.println(reader.getId());
 			for(PlaceReader reader2 : reader.getNextPlaces()){	// for each next hop
-				//System.out.println("\t"+reader2.getId());
 				Relationship relationship = new Relationship();							// create a new empty relationship
 				URI uri = sys_link_map.get(reader2.getId());							// get the URI associated with the id in `n_map`
 				int id = this.sys_db_map.get(reader.getId());							// retrieve the from node identifier
 				relationship.setTo(uri.toString());										// set this URI in `to` field
 				relationship.setType("ConnectedTo");									// set the connection type
-				RelationshipResult result = insertRelationship(relationship,id);			// try to insert in Neo4j `relationship`
+				RelationshipResult result = insertRelationship(relationship,id);		// try to insert in Neo4j `relationship`
 				this.r_set.add(URI.create(result.getSelf()));							// store the URI identifier in `r_set`
 			}
 		}
@@ -166,6 +164,7 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 		PathsRequest request = new PathsRequest();					// create a new path request
 		request.setMaxDepth(BigInteger.valueOf(maxlength));			// set `maxlength`
 		request.setTo(to.toString());								// set `to`
+		request.setAlgorithm("shortestPath");
 		
 		
 		Response res = this.getShortestPath(request,from,to);									// calculate the shortest path
@@ -175,6 +174,7 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 		 * has to be passed instead of a Class<T> object (because Java erases parameterized
 		 * type information during compilation)
 		 */
+		//System.out.println(res.readEntity(String.class));
 		List<Path> result = res.readEntity(new javax.ws.rs.core.GenericType<List<Path>>(){});	// obtain the result
 		
 		// at this point we have several paths stored in `result`
@@ -239,6 +239,16 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 		return result;
 	}
 	
+	/**
+	 * Calculate a shortest path
+	 * Syntax:		POST http://localhost:7474/db/data/node/{nodeFromID}/relationships
+	 * Body[JSON]:	{ "to" : "http://localhost:7474/db/data/node/{nodeToID}", "type" : "ConnectedTo" } 
+	 * @param request
+	 * @param from
+	 * @param to
+	 * @return
+	 * @throws ServiceException
+	 */
 	public Response getShortestPath(PathsRequest request, Integer from, URI to) throws ServiceException {
 		Response result;
 		try{
