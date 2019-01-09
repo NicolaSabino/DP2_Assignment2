@@ -121,7 +121,7 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 		for(PlaceReader reader : set){ // for each place in the system
 			for(PlaceReader reader2 : reader.getNextPlaces()){	// for each next hop
 				Relationship relationship = new Relationship();							// create a new empty relationship
-				URI uri = sys_link_map.get(reader2.getId());							// get the URI associated with the id in `n_map`
+				URI uri = sys_link_map.get(reader2.getId());							// get the URI associated with the id in `sys_link_map`
 				int id = this.sys_db_map.get(reader.getId());							// retrieve the from node identifier
 				relationship.setTo(uri.toString());										// set this URI in `to` field
 				relationship.setType("ConnectedTo");									// set the connection type
@@ -174,7 +174,6 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 		 * has to be passed instead of a Class<T> object (because Java erases parameterized
 		 * type information during compilation)
 		 */
-		//System.out.println(res.readEntity(String.class));
 		List<Path> result = res.readEntity(new javax.ws.rs.core.GenericType<List<Path>>(){});	// obtain the result
 		
 		// at this point we have several paths stored in `result`
