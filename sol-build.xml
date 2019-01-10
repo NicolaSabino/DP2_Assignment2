@@ -5,20 +5,13 @@
 			Script for RNS Assignment 2 solution
 	</description>
 	
-	<!-- external libraries -->
-	<property name="ext.lib.dir" location="/opt/dp2/shared/lib" />
+	<!-- property -->
+	<property name="custom.dir" location="${basedir}/custom"/>
 	
-	<!-- define location of directories -->
-	<property name="root.location" location="." />
-	<property name="custom.dir" location="${root.location}/custom"/>
-	<property name="ext.lib.dir" location="/opt/dp2/shared/lib" />
-	
-	<path id="project.classpath">
-		<pathelement location="bin" />
-		<fileset dir="${ext.lib.dir}">
-			<include name="**/*.jar" />
-		</fileset>
-	 </path>
+	<!-- The classpath to be used for compilation of the solution -->
+	<path id="RNS.classpath">
+		<pathelement location="${lib.dir}/RNS.jar" />
+	</path>
 
 	
 	<!-- define the client artifacts generation target -->
@@ -31,7 +24,7 @@
 		<javac destdir="bin" debug="on" includeantruntime="false">
 			<src path="gen-src" />
 	   		<src path="src" />
-			<classpath refid="project.classpath"/>
+			<classpath refid="RNS.classpath"/>
 		</javac>
 		
 	</target>

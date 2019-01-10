@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="dp2-student" name="it.polito.dp2.RNS.lab2.tests.RNSTests" skipped="0" tests="5" time="2.986" timestamp="2018-12-09T22:35:11">
+<testsuite errors="0" failures="0" hostname="dp2-student" name="it.polito.dp2.RNS.lab2.tests.RNSTests" skipped="0" tests="5" time="4.627" timestamp="2019-01-10T11:32:54">
   <properties>
     <property name="java.vendor" value="Oracle Corporation" />
     <property name="lib.dir" value="/home/dp2/workspace/A2/lib" />
@@ -10,7 +10,7 @@
     <property name="it.polito.dp2.RNS.lab2.PathFinderFactory" value="it.polito.dp2.RNS.sol2.PathFinderFactory" />
     <property name="os.name" value="Linux" />
     <property name="sun.boot.class.path" value="/usr/lib/jvm/jdk1.8.0_141/jre/lib/resources.jar:/usr/lib/jvm/jdk1.8.0_141/jre/lib/rt.jar:/usr/lib/jvm/jdk1.8.0_141/jre/lib/sunrsasign.jar:/usr/lib/jvm/jdk1.8.0_141/jre/lib/jsse.jar:/usr/lib/jvm/jdk1.8.0_141/jre/lib/jce.jar:/usr/lib/jvm/jdk1.8.0_141/jre/lib/charsets.jar:/usr/lib/jvm/jdk1.8.0_141/jre/lib/jfr.jar:/usr/lib/jvm/jdk1.8.0_141/jre/classes" />
-    <property name="TODAY" value="December 9 2018" />
+    <property name="TODAY" value="January 10 2019" />
     <property name="java.vm.specification.vendor" value="Oracle Corporation" />
     <property name="ant.home" value="/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327" />
     <property name="java.runtime.version" value="1.8.0_141-b15" />
@@ -24,7 +24,7 @@
     <property name="sun.boot.library.path" value="/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386" />
     <property name="ant.project.default-target" value="buildClient" />
     <property name="ant.project.name" value="RNS-2" />
-    <property name="DSTAMP" value="20181209" />
+    <property name="DSTAMP" value="20190110" />
     <property name="java.version" value="1.8.0_141" />
     <property name="user.timezone" value="" />
     <property name="sun.arch.data.model" value="32" />
@@ -36,7 +36,7 @@
     <property name="java.specification.name" value="Java Platform API Specification" />
     <property name="exit.code" value="126" />
     <property name="java.class.version" value="52.0" />
-    <property name="it.polito.dp2.RNS.Random.seed" value="1233508" />
+    <property name="it.polito.dp2.RNS.Random.seed" value="1123251" />
     <property name="user.country" value="US" />
     <property name="java.home" value="/usr/lib/jvm/jdk1.8.0_141/jre" />
     <property name="ant.file.type.RNS-2" value="file" />
@@ -62,10 +62,10 @@
     <property name="URL" value="http://localhost:7474/db" />
     <property name="java.vm.vendor" value="Oracle Corporation" />
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner it.polito.dp2.RNS.lab2.tests.RNSTests skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter showoutput=false outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=false formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/dp2/workspace/A2/testout.xml formatter=org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter crashfile=/home/dp2/workspace/A2/junitvmwatcher2539096365424236265.properties propsfile=/home/dp2/workspace/A2/junit1259809226994519506.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner it.polito.dp2.RNS.lab2.tests.RNSTests skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter showoutput=false outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=false formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/dp2/workspace/A2/testout.xml formatter=org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter crashfile=/home/dp2/workspace/A2/junitvmwatcher6092767505185912165.properties propsfile=/home/dp2/workspace/A2/junit3407963211005824814.properties" />
     <property name="java.class.path" value="/home/dp2/workspace/A2/build:/home/dp2/workspace/A2/lib/RNS.jar:/home/dp2/workspace/A2/lib/RNSRandom.jar:/home/dp2/workspace/A2/lib/hamcrest-core-1.3.jar:/home/dp2/workspace/A2/lib/junit-4.12.jar:/home/dp2/workspace/A2/lib/lab2.jar:/opt/dp2/shared/lib/activation-1.1.jar:/opt/dp2/shared/lib/annotations-2.0.1.jar:/opt/dp2/shared/lib/aopalliance-repackaged-2.5.0-b32.jar:/opt/dp2/shared/lib/codemodel-2.6.jar:/opt/dp2/shared/lib/commons-lang-2.6.jar:/opt/dp2/shared/lib/commons-lang3-3.2.1.jar:/opt/dp2/shared/lib/comresrcgen-1.0.jar:/opt/dp2/shared/lib/gson-2.2.4.jar:/opt/dp2/shared/lib/guava-15.0.jar:/opt/dp2/shared/lib/hk2-api-2.5.0-b32.jar:/opt/dp2/shared/lib/hk2-locator-2.5.0-b32.jar:/opt/dp2/shared/lib/hk2-utils-2.5.0-b32.jar:/opt/dp2/shared/lib/istack-commons-runtime-2.21.jar:/opt/dp2/shared/lib/istack-commons-tools-2.21.jar:/opt/dp2/shared/lib/jackson-annotations-2.4.0.jar:/opt/dp2/shared/lib/jackson-core-2.4.2.jar:/opt/dp2/shared/lib/jackson-core-asl-1.9.11.jar:/opt/dp2/shared/lib/jackson-databind-2.4.2.jar:/opt/dp2/shared/lib/jackson-dataformat-xml-2.4.2.jar:/opt/dp2/shared/lib/jackson-dataformat-yaml-2.4.2.jar:/opt/dp2/shared/lib/jackson-datatype-joda-2.4.2.jar:/opt/dp2/shared/lib/jackson-jaxrs-base-2.4.2.jar:/opt/dp2/shared/lib/jackson-jaxrs-json-provider-2.4.2.jar:/opt/dp2/shared/lib/jackson-mapper-asl-1.9.11.jar:/opt/dp2/shared/lib/jackson-module-jaxb-annotations-2.4.2.jar:/opt/dp2/shared/lib/javassist-3.20.0-GA.jar:/opt/dp2/shared/lib/javax.annotation-api-1.2.jar:/opt/dp2/shared/lib/javax.inject-2.5.0-b32.jar:/opt/dp2/shared/lib/javax.json-1.0.4.jar:/opt/dp2/shared/lib/javax.ws.rs-api-2.0.1.jar:/opt/dp2/shared/lib/jaxb-api-2.2.12-b140109.1041.jar:/opt/dp2/shared/lib/jaxb-core-2.2.11.jar:/opt/dp2/shared/lib/jaxb-runtime-2.2.11.jar:/opt/dp2/shared/lib/jaxb-xjc-2.2.11.jar:/opt/dp2/shared/lib/jersey-client-1.19.1.jar:/opt/dp2/shared/lib/jersey-client-2.25.1.jar:/opt/dp2/shared/lib/jersey-common-2.25.1.jar:/opt/dp2/shared/lib/jersey-container-servlet-2.25.1.jar:/opt/dp2/shared/lib/jersey-container-servlet-core-2.25.1.jar:/opt/dp2/shared/lib/jersey-core-1.19.1.jar:/opt/dp2/shared/lib/jersey-entity-filtering-2.25.1.jar:/opt/dp2/shared/lib/jersey-guava-2.25.1.jar:/opt/dp2/shared/lib/jersey-media-jaxb-2.25.1.jar:/opt/dp2/shared/lib/jersey-media-moxy-2.25.1.jar:/opt/dp2/shared/lib/jersey-media-multipart-2.25.1.jar:/opt/dp2/shared/lib/jersey-server-2.25.1.jar:/opt/dp2/shared/lib/joda-time-2.2.jar:/opt/dp2/shared/lib/json-simple-1.1.jar:/opt/dp2/shared/lib/jsonschema2pojo-core-0.4.0.jar:/opt/dp2/shared/lib/localizer-1.0.jar:/opt/dp2/shared/lib/mimepull-1.9.6.jar:/opt/dp2/shared/lib/org.eclipse.persistence.asm-2.6.0.jar:/opt/dp2/shared/lib/org.eclipse.persistence.core-2.6.0.jar:/opt/dp2/shared/lib/org.eclipse.persistence.moxy-2.6.0.jar:/opt/dp2/shared/lib/osgi-resource-locator-1.0.1.jar:/opt/dp2/shared/lib/reflections-0.9.9.jar:/opt/dp2/shared/lib/rngom-2.2.11.jar:/opt/dp2/shared/lib/slf4j-api-1.6.3.jar:/opt/dp2/shared/lib/stax2-api-3.1.4.jar:/opt/dp2/shared/lib/txw2-2.2.11.jar:/opt/dp2/shared/lib/validation-api-1.1.0.Final.jar:/opt/dp2/shared/lib/wadl-ant-1.1.6.jar:/opt/dp2/shared/lib/wadl-core-1.1.6.jar:/opt/dp2/shared/lib/wadl-xslt-1.1.6.jar:/opt/dp2/shared/lib/xsom-20140925.jar:/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib/ant-launcher.jar:/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib/ant.jar:/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib/ant-junit.jar:/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib/ant-junit4.jar" />
     <property name="ant.version" value="Apache Ant(TM) version 1.9.6 compiled on June 29 2015" />
-    <property name="TSTAMP" value="2335" />
+    <property name="TSTAMP" value="1232" />
     <property name="test.class" value="it.polito.dp2.RNS.lab2.tests.RNSTests" />
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
     <property name="java.vm.specification.version" value="1.8" />
@@ -92,7 +92,7 @@
     <property name="it.polito.dp2.RNS.RnsReaderFactory" value="it.polito.dp2.RNS.Random.RnsReaderFactoryImpl" />
     <property name="file.encoding" value="UTF-8" />
     <property name="shared.location" value="/opt/dp2/shared" />
-    <property name="seed" value="1233508" />
+    <property name="seed" value="1123251" />
     <property name="gen.schema.dir" value="/home/dp2/workspace/A2/gen-schema" />
     <property name="it.polito.dp2.RNS.lab2.URL" value="http://localhost:7474/db" />
     <property name="neo4j.location" value="/opt/neo4j-community-3.2.3" />
@@ -100,27 +100,27 @@
     <property name="src.dir" value="/home/dp2/workspace/A2/src" />
     <property name="ant.project.invoked-targets" value="runFuncTest.real" />
   </properties>
-  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testBadState" time="0.163" />
-  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testUnknownSource" time="1.652" />
-  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testReloadModel" time="0.299" />
-  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testUnknownDestination" time="0.31" />
-  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testFindShortestPaths" time="0.42" />
-  <system-out><![CDATA[Random RnsReader: Using seed: 1233508
+  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testBadState" time="0.234" />
+  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testUnknownSource" time="1.239" />
+  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testReloadModel" time="0.414" />
+  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testUnknownDestination" time="2.079" />
+  <testcase classname="it.polito.dp2.RNS.lab2.tests.RNSTests" name="testFindShortestPaths" time="0.505" />
+  <system-out><![CDATA[Random RnsReader: Using seed: 1123251
 Random RnsReader: Test case: 0
 DEBUG: starting testWrongLoad
-Random RnsReader: Using seed: 1233508
+Random RnsReader: Using seed: 1123251
 Random RnsReader: Test case: 0
 DEBUG: starting testWrongReachability
-Random RnsReader: Using seed: 1233508
+Random RnsReader: Using seed: 1123251
 Random RnsReader: Test case: 0
 DEBUG: starting testReloadModel
-Random RnsReader: Using seed: 1233508
+Random RnsReader: Using seed: 1123251
 Random RnsReader: Test case: 0
 DEBUG: starting testWrongReachability
-Random RnsReader: Using seed: 1233508
+Random RnsReader: Using seed: 1123251
 Random RnsReader: Test case: 0
 DEBUG: starting testFindShortestPath
-Random RnsReader: Using seed: 1233508
+Random RnsReader: Using seed: 1123251
 Random RnsReader: Test case: 0
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
