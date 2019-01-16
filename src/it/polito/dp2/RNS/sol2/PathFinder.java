@@ -29,6 +29,7 @@ import it.polito.dp2.RNS.rest.jaxb.Node;
 import it.polito.dp2.RNS.rest.jaxb.NodeResult;
 import it.polito.dp2.RNS.rest.jaxb.Path;
 import it.polito.dp2.RNS.rest.jaxb.PathsRequest;
+import it.polito.dp2.RNS.rest.jaxb.PathsRequest.Relationships;
 import it.polito.dp2.RNS.rest.jaxb.Relationship;
 import it.polito.dp2.RNS.rest.jaxb.RelationshipResult;
 
@@ -86,8 +87,10 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 	public boolean isModelLoaded() {
 		// check `status` attribute
 		if(this.status.compareTo(Status.LOADED) == 0){
+			System.out.println("MODEL LOADED");
 			return true;	// the PathFinder is able to compute a shortest path
 		}else{
+			System.out.println("MODEL NOT LOADED");
 			return false;	// the PathFInder is not able to compute a shortest path
 			// TODO: throw an exception
 		}
@@ -102,7 +105,19 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 	 */
 	public void reloadModel() throws ServiceException, ModelException {
 		
+		if(isModelLoaded()){
+			System.out.println("clear all");
+			removeConnections();
+			removeNodes();
+			this.sys_link_map.clear();
+			this.link_sys_map.clear();
+			this.sys_db_map.clear();
+			this.r_set.clear();
+			
+		}
+		
 		Set<PlaceReader> set = monitor.getPlaces(null); // get a random set of places
+		//Set<ConnectionReader> set2 = monitor.getConnections();
 		if(set == null) throw new ModelException("Exception during reading random datas");
 	
 		// -- Neo4j NODES --
@@ -110,14 +125,14 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 			Node node = new Node();														// create a new empty node
 			node.setId(reader.getId());													// fill it with the corresponding id of the reader
 			NodeResult result;
-			try {
+			try { // try to insert in Neo4j `node`
 				result = insertNewNode(node);
 			} catch (UnknownIdException e) {
 				throw new ServiceException();
-			}									// try to insert in Neo4j `node`	
-			this.sys_link_map.put(reader.getId(),URI.create(result.getSelf()));			// store the URI identifier in `n_map` with the corresponding id
-			this.link_sys_map.put(URI.create(result.getSelf()),reader.getId());
-			this.sys_db_map.put(reader.getId(),result.getMetadata().getId().intValue());
+			}										
+			if(null != this.sys_link_map.putIfAbsent(reader.getId(),URI.create(result.getSelf()))) System.out.println("duplicate");			
+			if(null != this.link_sys_map.putIfAbsent(URI.create(result.getSelf()),reader.getId()))System.out.println("duplicate");
+			if(null != this.sys_db_map.putIfAbsent(reader.getId(),result.getMetadata().getId().intValue()))System.out.println("duplicate");
 		}
 		
 		// -- Neo4j RELATIONSHIPS --
@@ -130,12 +145,35 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 				relationship.setType("ConnectedTo");									// set the connection type
 				RelationshipResult result = insertRelationship(relationship,id);		// try to insert in Neo4j `relationship`
 				this.r_set.add(URI.create(result.getSelf()));							// store the URI identifier in `r_set`
+				//System.out.println("from "+reader.getId()+" to " + reader2.getId());
 			}
 		}
 		
 		this.status = Status.LOADED; // change the state
 
 	}
+
+	private void removeNodes() {
+		for(URI tmp:this.sys_link_map.values()){
+			try {
+				removeResource(tmp);
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+	private void removeConnections() {
+		for(URI tmp:this.r_set){
+			try {
+				removeResource(tmp);
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 
 	/**
 	 * Looks for the shortest paths connecting a source place to a destination place
@@ -157,13 +195,19 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 		if(this.status == Status.NOT_LOADED)						// if the operation is called when in the initial state 
 			throw new BadStateException("No model loaded");			// (no model loaded) throw an exception														
 		Integer from = this.sys_db_map.get(source);					// get the `from` identifier  previously stored
+		System.out.println("from: " + from + "<-" + source);
 		if(from == null)											// Check if `source` is reliable
 			throw new UnknownIdException("Bad `from` identifier");					
 		URI to = this.sys_link_map.get(destination); 				// get the `to` resource previously stored
 		if(to == null)												// check if `destination is reliable
 			throw new UnknownIdException("Bad `to` identifier");						
+		System.out.println("to: " + to.toString() + " <-" + destination);
 		PathsRequest request = new PathsRequest();					// create a new path request
 		request.setMaxDepth(BigInteger.valueOf(maxlength));			// set `maxlength`
+		Relationships r = new Relationships();
+		r.setDirection("out");
+		r.setType("ConnectedTo");
+		request.setRelationships(r);
 		request.setTo(to.toString());								// set `to`
 		request.setAlgorithm("shortestPath");
 		
@@ -186,6 +230,16 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 				tmp.add(id);											// add `id` to the temp list
 			}
 			resultSet.add(tmp);											// add `tmp` to the `resultSet`
+		}
+		
+		System.out.println("from "+source+" to " +destination);
+		System.out.println("___________");
+		for(Path path : result){ 					// for each path stored in `result`
+			for(String node :path.getNodes()){		// for each node in the path
+				String id = this.link_sys_map.get(URI.create(node));	// calculate the corresponding place stored in `link_sys_map`
+				System.out.println(id);
+			}
+			System.out.println("___________");
 		}
 		return resultSet;
 	}
@@ -233,6 +287,17 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 				.post(Entity.entity(r, MediaType.APPLICATION_JSON), RelationshipResult.class);	// build a POST request invocation
 			// if we obtain an empty result, throw an exception
 			if(result == null) throw new ServiceException("An ecxception occurred while uploading");
+		}catch(Exception e){
+			throw new ServiceException("Exception during relationship uploading");
+		}
+		return result;
+	}
+	
+	public Response removeResource(URI resource) throws ServiceException{
+		
+		Response result;
+		try{
+			result = this.client.target(resource).request().delete();
 		}catch(Exception e){
 			throw new ServiceException("Exception during relationship uploading");
 		}

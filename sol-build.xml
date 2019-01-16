@@ -29,6 +29,8 @@
 	
 	<!-- define the client artifacts generation target -->
 	<target name="generate-artifacts">
+		<mkdir dir="${gen.src}"/>
+		<mkdir dir="${build.dir}"/>
 		<echo message="Generate classes from DataTypes.xsd" />
 		<exec executable="xjc">
 			<arg line="-d gen-src -p it.polito.dp2.RNS.rest.jaxb ${custom.dir}/DataTypes.xsd"/>
