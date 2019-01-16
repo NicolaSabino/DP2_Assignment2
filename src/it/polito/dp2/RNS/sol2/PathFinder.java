@@ -100,29 +100,32 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 	 * @throws ServiceException if the operation cannot be completed because the remote service is not available or fails
 	 * @throws ModelException if the operation cannot be completed because the current model cannot be read or is wrong (the problem is not related to the remote service)
 	 */
-	@Override
 	public void reloadModel() throws ServiceException, ModelException {
 		
 		Set<PlaceReader> set = monitor.getPlaces(null); // get a random set of places
 		if(set == null) throw new ModelException("Exception during reading random datas");
 	
-		// -- NODES --
+		// -- Neo4j NODES --
 		for(PlaceReader reader : set ){ // for each place in the system
 			Node node = new Node();														// create a new empty node
 			node.setId(reader.getId());													// fill it with the corresponding id of the reader
-			NodeResult result = insertNewNode(node);									// try to insert in Neo4j `node`	
+			NodeResult result;
+			try {
+				result = insertNewNode(node);
+			} catch (UnknownIdException e) {
+				throw new ServiceException();
+			}									// try to insert in Neo4j `node`	
 			this.sys_link_map.put(reader.getId(),URI.create(result.getSelf()));			// store the URI identifier in `n_map` with the corresponding id
 			this.link_sys_map.put(URI.create(result.getSelf()),reader.getId());
 			this.sys_db_map.put(reader.getId(),result.getMetadata().getId().intValue());
-			
-			//System.out.println("NODE:" + reader.getId() + "\t\t" + result.getSelf() );
 		}
-		// -- RELATIONSHIPS --
+		
+		// -- Neo4j RELATIONSHIPS --
 		for(PlaceReader reader : set){ // for each place in the system
 			for(PlaceReader reader2 : reader.getNextPlaces()){	// for each next hop
 				Relationship relationship = new Relationship();							// create a new empty relationship
 				URI uri = sys_link_map.get(reader2.getId());							// get the URI associated with the id in `sys_link_map`
-				int id = this.sys_db_map.get(reader.getId());							// retrieve the from node identifier
+				int id = this.sys_db_map.get(reader.getId());							// retrieve the `from` node identifier
 				relationship.setTo(uri.toString());										// set this URI in `to` field
 				relationship.setType("ConnectedTo");									// set the connection type
 				RelationshipResult result = insertRelationship(relationship,id);		// try to insert in Neo4j `relationship`
@@ -151,15 +154,13 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 			throws UnknownIdException, BadStateException, ServiceException {
 		Set<List<String>> resultSet = new HashSet<List<String>>();	
 		
-		//System.out.println("source:" + source + " destination:" + destination + " maxlenght:" + maxlength);
-		
 		if(this.status == Status.NOT_LOADED)						// if the operation is called when in the initial state 
 			throw new BadStateException("No model loaded");			// (no model loaded) throw an exception														
 		Integer from = this.sys_db_map.get(source);					// get the `from` identifier  previously stored
 		if(from == null)											// Check if `source` is reliable
 			throw new UnknownIdException("Bad `from` identifier");					
 		URI to = this.sys_link_map.get(destination); 				// get the `to` resource previously stored
-		if(to == null)												// check id `destination is reliable
+		if(to == null)												// check if `destination is reliable
 			throw new UnknownIdException("Bad `to` identifier");						
 		PathsRequest request = new PathsRequest();					// create a new path request
 		request.setMaxDepth(BigInteger.valueOf(maxlength));			// set `maxlength`
@@ -197,7 +198,7 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 	 * @return An object representing the result of the insert operation
 	 * @throws ServiceException
 	 */
-	public NodeResult insertNewNode(Node n) throws ServiceException {
+	public NodeResult insertNewNode(Node n) throws UnknownIdException {
 		NodeResult result;																// create an empty result
 		try{																			// try to insert the node 
 			result = this.target														// base URI
@@ -207,7 +208,7 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 			// if we obtain an empty result, throw an exception
 			if(result == null) throw new ServiceException("An ecxception occurred while uploading");
 		}catch(Exception e){
-			throw new ServiceException("Exception during node uploading");
+			throw new UnknownIdException("Exception during node uploading");
 		}
 		return result;
 	}
@@ -251,9 +252,9 @@ public class PathFinder implements it.polito.dp2.RNS.lab2.PathFinder {
 	public Response getShortestPath(PathsRequest request, Integer from, URI to) throws ServiceException {
 		Response result;
 		try{
-			result = this.target															// base URI
-					.path("data").path("node").path(String.valueOf(from)).path("paths")		// `/data/node/{nodeFromID}/paths`
-					.request(MediaType.APPLICATION_JSON)									// start building a request and define the response media types.
+			result = this.target																// base URI
+					.path("data").path("node").path(String.valueOf(from)).path("paths")			// `/data/node/{nodeFromID}/paths`
+					.request(MediaType.APPLICATION_JSON)										// start building a request and define the response media types.
 					.post(Entity.entity(request, MediaType.APPLICATION_JSON), Response.class);	// build a POST request invocation
 				// if we obtain an empty result, throw an exception
 				if(result == null)
